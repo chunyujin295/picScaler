@@ -8,7 +8,7 @@
 #include <unordered_set>
 #include <regex>
 
-namespace common_ced
+namespace utils
 {
 	std::string StringUtils::anyToString(const boost::any& data)
 	{
@@ -119,4 +119,4 @@ namespace common_ced
 	{
 		boost::to_lower(str);
 	}
-}// namespace common_ced
+}// namespace utils

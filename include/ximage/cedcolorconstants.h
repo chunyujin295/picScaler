@@ -1,18 +1,9 @@
-/*************************************************
- * 描述: 
- *
- * File: cedcolorconstants.h
- * Author: wangzihan@mozihealthcare.cn
- * Date: 2025-02-18
- * Update: 
- * ************************************************/
-
 #ifndef EDITORCONTROLV5_CEDCOLORCONSTANTS_H
 #define EDITORCONTROLV5_CEDCOLORCONSTANTS_H
 
 #include <string>
 
-namespace common_ced
+namespace utils
 {
 	const std::string CED_COLOR_TRANSPARENT = "Transparent";
 	const std::string CED_COLOR_ALICEBLUE = "AliceBlue";

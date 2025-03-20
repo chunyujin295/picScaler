@@ -8,13 +8,13 @@
  * ************************************************/
 
 #include <algorithm>
-#include <ximage/cedcolor.h>
+#include <ximage/xcolor.h>
 #include <utils/globalmacro.h>
 #include <iomanip>
 #include <sstream>
 #include <vector>
 
-const std::unordered_map<std::string, std::string> common_ced::CedColor::m_colorNameToArgb = {
+const std::unordered_map<std::string, std::string> utils::xcolor::m_colorNameToArgb = {
 		{"Transparent", "#00FFFFFF"},
 		{"AliceBlue", "#FFF0F8FF"},
 		{"AntiqueWhite", "#FFFAEBD7"},
@@ -157,17 +157,17 @@ const std::unordered_map<std::string, std::string> common_ced::CedColor::m_color
 		{"Yellow", "#FFFFFF00"},
 		{"YellowGreen", "#FF9ACD32"}};
 
-common_ced::CedColor::CedColor()
+utils::xcolor::xcolor()
 	: m_red(0), m_green(0), m_blue(0), m_alpha(0), m_isValid(false)
 {
 }
 
-common_ced::CedColor::CedColor(unsigned char red, unsigned char green, unsigned char blue, unsigned char alpha)
+utils::xcolor::xcolor(unsigned char red, unsigned char green, unsigned char blue, unsigned char alpha)
 	: m_red(red), m_green(green), m_blue(blue), m_alpha(alpha), m_isValid(true)
 {
 }
 
-common_ced::CedColor::CedColor(int red, int green, int blue, int alpha)
+utils::xcolor::xcolor(int red, int green, int blue, int alpha)
 	: m_red(S_CAST(unsigned char, (std::min(std::max(red, (int)CED_COLOR_MIN_COMPONENT), (int)CED_COLOR_MAX_COMPONENT)))),
 	  m_green(S_CAST(unsigned char, (std::min(std::max(green, (int)CED_COLOR_MIN_COMPONENT), (int)CED_COLOR_MAX_COMPONENT)))),
 	  m_blue(S_CAST(unsigned char, (std::min(std::max(blue, (int)CED_COLOR_MIN_COMPONENT), (int)CED_COLOR_MAX_COMPONENT)))),
@@ -177,12 +177,12 @@ common_ced::CedColor::CedColor(int red, int green, int blue, int alpha)
 }
 
 
-common_ced::CedColor::CedColor(const common_ced::CedColor& color)
+utils::xcolor::xcolor(const utils::xcolor& color)
 	: m_red(color.m_red), m_green(color.m_green), m_blue(color.m_blue), m_alpha(color.m_alpha), m_isValid(color.m_isValid)
 {
 }
 
-common_ced::CedColor::CedColor(const std::string& colorString)
+utils::xcolor::xcolor(const std::string& colorString)
 {
 	bool res = false;
 	if (colorString.find(',') != std::string::npos)
@@ -210,56 +210,56 @@ common_ced::CedColor::CedColor(const std::string& colorString)
 	}
 }
 
-bool common_ced::CedColor::isValid() const
+bool utils::xcolor::isValid() const
 {
 	return m_isValid;
 }
 
-unsigned char common_ced::CedColor::red() const
+unsigned char utils::xcolor::red() const
 {
 	return m_red;
 }
 
-void common_ced::CedColor::setRed(unsigned char red)
+void utils::xcolor::setRed(unsigned char red)
 {
 	m_red = red;
 	m_isValid = true;
 }
 
-unsigned char common_ced::CedColor::blue() const
+unsigned char utils::xcolor::blue() const
 {
 	return m_blue;
 }
 
-void common_ced::CedColor::setBlue(unsigned char blue)
+void utils::xcolor::setBlue(unsigned char blue)
 {
 	m_blue = blue;
 	m_isValid = true;
 }
 
-unsigned char common_ced::CedColor::green() const
+unsigned char utils::xcolor::green() const
 {
 	return m_green;
 }
 
-void common_ced::CedColor::setGreen(unsigned char green)
+void utils::xcolor::setGreen(unsigned char green)
 {
 	m_green = green;
 	m_isValid = true;
 }
 
-unsigned char common_ced::CedColor::alpha() const
+unsigned char utils::xcolor::alpha() const
 {
 	return m_alpha;
 }
 
-void common_ced::CedColor::setAlpha(unsigned char alpha)
+void utils::xcolor::setAlpha(unsigned char alpha)
 {
 	m_alpha = alpha;
 	m_isValid = true;
 }
 
-void common_ced::CedColor::setAll(unsigned char red, unsigned char green, unsigned char blue, unsigned char alpha)
+void utils::xcolor::setAll(unsigned char red, unsigned char green, unsigned char blue, unsigned char alpha)
 {
 	m_red = red;
 	m_green = green;
@@ -269,7 +269,7 @@ void common_ced::CedColor::setAll(unsigned char red, unsigned char green, unsign
 }
 
 
-common_ced::CedColor& common_ced::CedColor::operator=(const common_ced::CedColor& color)
+utils::xcolor& utils::xcolor::operator=(const utils::xcolor& color)
 {
 	if (this != &color)
 	{
@@ -282,7 +282,7 @@ common_ced::CedColor& common_ced::CedColor::operator=(const common_ced::CedColor
 	return *this;
 }
 
-bool common_ced::CedColor::operator==(const common_ced::CedColor& color) const
+bool utils::xcolor::operator==(const utils::xcolor& color) const
 {
 	if (!m_isValid && !color.m_isValid)
 	{
@@ -295,11 +295,11 @@ bool common_ced::CedColor::operator==(const common_ced::CedColor& color) const
 			m_isValid == color.m_isValid);
 }
 
-bool common_ced::CedColor::operator!=(const common_ced::CedColor& color) const
+bool utils::xcolor::operator!=(const utils::xcolor& color) const
 {
 	return !(*this == color);
 }
-void common_ced::CedColor::setRGB(unsigned int colRGB)
+void utils::xcolor::setRGB(unsigned int colRGB)
 {
 	// 0x00BBGGRR
 	m_red = colRGB & CED_COLOR_MASK_8_BITS;                              // 提取红色分量（最低8位）
@@ -308,7 +308,7 @@ void common_ced::CedColor::setRGB(unsigned int colRGB)
 	m_alpha = CED_COLOR_ALPHA_OPAQUE;                                    // 默认alpha为255
 	m_isValid = true;
 }
-unsigned int common_ced::CedColor::getRGB() const
+unsigned int utils::xcolor::getRGB() const
 {
 	if (!m_isValid)
 	{
@@ -316,7 +316,7 @@ unsigned int common_ced::CedColor::getRGB() const
 	}
 	return (m_blue << CED_COLOR_SHIFT_16_BITS) | (m_green << CED_COLOR_SHIFT_8_BITS) | m_red;
 }
-void common_ced::CedColor::setRGBA(unsigned int colRGBA)
+void utils::xcolor::setRGBA(unsigned int colRGBA)
 {
 	// 0xAABBGGRR
 	m_alpha = (colRGBA >> CED_COLOR_SHIFT_24_BITS) & CED_COLOR_MASK_8_BITS;// 提取alpha分量（最高8位）
@@ -325,7 +325,7 @@ void common_ced::CedColor::setRGBA(unsigned int colRGBA)
 	m_blue = (colRGBA >> CED_COLOR_SHIFT_16_BITS) & CED_COLOR_MASK_8_BITS; // 提取蓝色分量（第17到第24位）
 	m_isValid = true;
 }
-unsigned int common_ced::CedColor::getRGBA() const
+unsigned int utils::xcolor::getRGBA() const
 {
 	if (!m_isValid)
 	{
@@ -334,7 +334,7 @@ unsigned int common_ced::CedColor::getRGBA() const
 	return (m_alpha << CED_COLOR_SHIFT_24_BITS) | (m_blue << CED_COLOR_SHIFT_16_BITS) | (m_green << CED_COLOR_SHIFT_8_BITS) | m_red;
 }
 
-std::string common_ced::CedColor::getAsString() const
+std::string utils::xcolor::getAsString() const
 {
 	if (!m_isValid)
 	{
@@ -351,7 +351,7 @@ std::string common_ced::CedColor::getAsString() const
 	return oss.str();
 }
 
-bool common_ced::CedColor::hexToColor(const std::string& hex)
+bool utils::xcolor::hexToColor(const std::string& hex)
 {
 	try
 	{
@@ -392,7 +392,7 @@ bool common_ced::CedColor::hexToColor(const std::string& hex)
 	return false;
 }
 
-bool common_ced::CedColor::decToColor(const std::string& dec)
+bool utils::xcolor::decToColor(const std::string& dec)
 {
 	std::vector<unsigned char> rgba;
 	std::istringstream iss(dec);
@@ -435,7 +435,7 @@ bool common_ced::CedColor::decToColor(const std::string& dec)
 }
 
 
-//double common_ced::CedColor::luminance() const
+//double utils::XColor::luminance() const
 //{
 //	// 将颜色分量从0-255范围归一化到0-1范围
 //	double rNorm = m_red / 255.0;

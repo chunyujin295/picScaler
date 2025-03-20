@@ -1,11 +1,3 @@
-/*************************************************
-  * 描述：自定义CedImage类，用于内部内存图片类型中转等功能
-  *
-  * File：CedImage.h
-  * Author：chenyujin@mozihealthcare.cn
-  * Date：25-2-12
-  * Update：
-  * ************************************************/
 #ifndef CEDIMAGE_H
 #define CEDIMAGE_H
 
@@ -15,11 +7,11 @@
 #define ALPHA_VAL_DEFAULT 255
 #define BITS_PER_CHANNELS 8
 #include <vector>
-#include <ximage/cedcolor.h>
+#include <ximage/xcolor.h>
 
-namespace common_ced
+namespace utils
 {
-	class CedImage
+	class ximage
 	{
 	public:
 		enum class ColorFormat// 表示图片的色彩模式
@@ -54,7 +46,7 @@ namespace common_ced
 		/**
 		 * 无参构造
 		 */
-		CedImage();
+		ximage();
 
 
 		/**
@@ -64,7 +56,7 @@ namespace common_ced
 		 * @param color
 		 * @param format
 		 */
-		CedImage(int width, int height, CedColor color = CedColor(CED_COLOR_WHITE), ColorFormat format = ColorFormat::Format_RGB888);
+		ximage(int width, int height, xcolor color = xcolor(CED_COLOR_WHITE), ColorFormat format = ColorFormat::Format_RGB888);
 
 
 		/**
@@ -75,7 +67,7 @@ namespace common_ced
 		 * @param format
 		 * @param beenAlignMemory
 		 */
-		CedImage(const unsigned char* data, int width, int height, ColorFormat format, bool beenAlignMemory = false);
+		ximage(const unsigned char* data, int width, int height, ColorFormat format, bool beenAlignMemory = false);
 
 
 		/**
@@ -86,38 +78,38 @@ namespace common_ced
 		 * @param height
 		 * @param beenAlignMemory
 		 */
-		CedImage(const unsigned char* rgb, const unsigned char* alpha, int width, int height, bool beenAlignMemory = false);
+		ximage(const unsigned char* rgb, const unsigned char* alpha, int width, int height, bool beenAlignMemory = false);
 
 
 		/**
 		 * 有参构造，从图片文件中创建CedImage
 		 * @param fileName
 		 */
-		explicit CedImage(const char* fileName);
+		explicit ximage(const char* fileName);
 
 		/**
 		 * 有参构造，从base64创建CedImage
 		 * @param base64Data
 		 */
-		CedImage(const std::string& base64Data);
+		ximage(const std::string& base64Data);
 
 		/**
 		 * 拷贝构造
 		 * @param other
 		 */
-		CedImage(const CedImage& other);
+		ximage(const ximage& other);
 
 		/**
 		 * 移动构造
 		 * @param other
 		 */
-		CedImage(CedImage&& other) noexcept;
+		ximage(ximage&& other) noexcept;
 
 		/**
 		 * 赋值构造
 		 * @param other
 		 */
-		explicit CedImage(const CedImage* other);
+		explicit ximage(const ximage* other);
 
 
 		/**
@@ -125,23 +117,23 @@ namespace common_ced
 		 * @param other
 		 * @return
 		 */
-		CedImage& operator=(const CedImage& other);
+		ximage& operator=(const ximage& other);
 
 		/**
 		 * 赋值运算符重载(移动构造)
 		 * @param other 赋值
 		 * @return
 		 */
-		CedImage& operator=(CedImage&& other) noexcept;
+		ximage& operator=(ximage&& other) noexcept;
 
 		/**
 		 * ==运算符重载
 		 * @param other 赋值
 		 * @return
 		 */
-		bool operator==(const CedImage& other) const;
+		bool operator==(const ximage& other) const;
 
-		~CedImage();
+		~ximage();
 
 		/**
 		 * 清空内容
@@ -355,7 +347,7 @@ namespace common_ced
 		 * 深拷贝
 		 * @param other 源CedImage
 		 */
-		void deepCopy(const CedImage& other);
+		void deepCopy(const ximage& other);
 
 		/**
 		 * 用于适配stb_image将图片保存在内存上下文的方法
@@ -393,7 +385,7 @@ namespace common_ced
 		 * swap用于内存交换
 		 * @param other
 		 */
-		// void swap(CedImage& other);
+		// void swap(XImage& other);
 
 	private:
 		// 图像元数据信息

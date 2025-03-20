@@ -22,7 +22,7 @@
 #include <utils/stringutils.h>
 #include <utils/loghelper.h>
 
-namespace common_ced {
+namespace utils {
     // 通用类型转换
     /**
      * @newtype : 转换后的类型
@@ -73,7 +73,7 @@ namespace common_ced {
             k = item.substr(pos + 1, item.length());\
             k.erase(std::remove_if(k.begin(), k.end(), ::isspace), k.end());\
             v.erase(std::remove_if(v.begin(), v.end(), ::isspace), v.end());\
-            index = common_ced::StringUtils::strToInt(k).get();\
+            index = utils::StringUtils::strToInt(k).get();\
             result.insert(std::pair<T, std::string>{(T)index, v});\
         } else {\
             item.erase(std::remove_if(item.begin(), item.end(), ::isspace), item.end());\
@@ -100,7 +100,7 @@ return res.at(i);\
             k = item.substr(pos + 1, item.length());\
             k.erase(std::remove_if(k.begin(), k.end(), ::isspace), k.end());\
             v.erase(std::remove_if(v.begin(), v.end(), ::isspace), v.end());\
-            index = common_ced::StringUtils::strToInt(k).get();\
+            index = utils::StringUtils::strToInt(k).get();\
             result.insert(std::pair<std::string,T>{v,(T)index});\
         } else {\
             item.erase(std::remove_if(item.begin(), item.end(), ::isspace), item.end());\
@@ -134,7 +134,7 @@ return res.at(i);\
             k = item.substr(pos + 1, item.length());\
             k.erase(std::remove_if(k.begin(), k.end(), ::isspace), k.end());\
             v.erase(std::remove_if(v.begin(), v.end(), ::isspace), v.end());\
-            index = common_ced::StringUtils::strToInt(k).get();\
+            index = utils::StringUtils::strToInt(k).get();\
             result.insert(std::pair<T, std::string>{(T)index, v});\
         } else {\
             item.erase(std::remove_if(item.begin(), item.end(), ::isspace), item.end());\
@@ -161,7 +161,7 @@ return res.at(i);\
             k = item.substr(pos + 1, item.length());\
             k.erase(std::remove_if(k.begin(), k.end(), ::isspace), k.end());\
             v.erase(std::remove_if(v.begin(), v.end(), ::isspace), v.end());\
-            index = common_ced::StringUtils::strToInt(k).get();\
+            index = utils::StringUtils::strToInt(k).get();\
             result.insert(std::pair<std::string,T>{v,(T)index});\
         } else {\
             item.erase(std::remove_if(item.begin(), item.end(), ::isspace), item.end());\
@@ -195,6 +195,6 @@ return res.at(i);\
     auto end = std::chrono::steady_clock::now(); \
     return std::to_string(std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count()); \
 }() )
-} // namespace common_ced
+} // namespace utils
 
 #endif//GLOBALMACRO_H

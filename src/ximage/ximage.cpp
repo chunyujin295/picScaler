@@ -1,4 +1,4 @@
-#include <ximage/cedimage.h>
+#include <ximage/ximage.h>
 #include <ximage/base64.h>
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
@@ -17,12 +17,12 @@
 #include <spdlog/fmt/bundled/chrono.h>
 
 
-common_ced::CedImage::CedImage()
+utils::ximage::ximage()
 {
 	this->m_meta = new MetaData();
 }
 
-common_ced::CedImage::CedImage(int width, int height, CedColor color, ColorFormat format)
+utils::ximage::ximage(int width, int height, xcolor color, ColorFormat format)
 {
 	this->m_meta = new MetaData();
 	this->m_meta->width = width;
@@ -68,11 +68,11 @@ common_ced::CedImage::CedImage(int width, int height, CedColor color, ColorForma
 	}
 	catch (const std::out_of_range& e)
 	{
-		common_ced::LOG_ERROR("访问数组越界：", e.what());// 输出越界信息
+		utils::LOG_ERROR("访问数组越界：", e.what());// 输出越界信息
 	}
 }
 
-common_ced::CedImage::CedImage(const unsigned char* data, int width, int height, ColorFormat format, bool beenAlignMemory)
+utils::ximage::ximage(const unsigned char* data, int width, int height, ColorFormat format, bool beenAlignMemory)
 {
 	this->m_meta = new MetaData();
 	if (!this->loadFromMemory(data, width, height, format, beenAlignMemory))
@@ -81,7 +81,7 @@ common_ced::CedImage::CedImage(const unsigned char* data, int width, int height,
 	}
 }
 
-common_ced::CedImage::CedImage(const unsigned char* rgb, const unsigned char* alpha, int width, int height, bool beenAlignMemory)
+utils::ximage::ximage(const unsigned char* rgb, const unsigned char* alpha, int width, int height, bool beenAlignMemory)
 {
 	this->m_meta = new MetaData();
 	if (!this->loadFromMemory(rgb, alpha, width, height, beenAlignMemory))
@@ -90,7 +90,7 @@ common_ced::CedImage::CedImage(const unsigned char* rgb, const unsigned char* al
 	}
 }
 
-common_ced::CedImage::CedImage(const char* fileName)
+utils::ximage::ximage(const char* fileName)
 {
 	this->m_meta = new MetaData();
 	if (!this->loadFromFile(fileName))
@@ -99,7 +99,7 @@ common_ced::CedImage::CedImage(const char* fileName)
 	}
 }
 
-common_ced::CedImage::CedImage(const std::string& base64Data)
+utils::ximage::ximage(const std::string& base64Data)
 {
 	this->m_meta = new MetaData();
 	if (!this->loadFormBase64(base64Data))
@@ -108,24 +108,24 @@ common_ced::CedImage::CedImage(const std::string& base64Data)
 	}
 }
 
-common_ced::CedImage::CedImage(const CedImage& other)
+utils::ximage::ximage(const ximage& other)
 {
 	deepCopy(other);
 }
 
-common_ced::CedImage::CedImage(CedImage&& other) noexcept : m_meta(other.m_meta)
+utils::ximage::ximage(ximage&& other) noexcept : m_meta(other.m_meta)
 {
 	other.m_meta = nullptr;
 }
 
-common_ced::CedImage::CedImage(const CedImage* other)
+utils::ximage::ximage(const ximage* other)
 {
 	deepCopy(*other);
 }
 
-common_ced::CedImage& common_ced::CedImage::operator=(const CedImage& other)
+utils::ximage& utils::ximage::operator=(const ximage& other)
 {
-	// CedImage temp(other);
+	// XImage temp(other);
 	// this->swap(temp);// 交换当前对象和临时对象的资源
 	// return *this;
 
@@ -138,7 +138,7 @@ common_ced::CedImage& common_ced::CedImage::operator=(const CedImage& other)
 	return *this;
 }
 
-common_ced::CedImage& common_ced::CedImage::operator=(CedImage&& other) noexcept
+utils::ximage& utils::ximage::operator=(ximage&& other) noexcept
 {
 	if (this != &other)
 	{
@@ -150,12 +150,12 @@ common_ced::CedImage& common_ced::CedImage::operator=(CedImage&& other) noexcept
 	return *this;
 }
 
-// void common_ced::CedImage::swap(CedImage& other)
+// void utils::XImage::swap(XImage& other)
 // {
 // 	std::swap(this->m_meta, other.m_meta);
 // }
 
-bool common_ced::CedImage::operator==(const CedImage& other) const
+bool utils::ximage::operator==(const ximage& other) const
 {
 	if (this == &other || this->m_meta == other.m_meta)
 	{
@@ -174,7 +174,7 @@ bool common_ced::CedImage::operator==(const CedImage& other) const
 	return false;
 }
 
-common_ced::CedImage::~CedImage()
+utils::ximage::~ximage()
 {
 	if (this->m_meta)
 	{
@@ -185,7 +185,7 @@ common_ced::CedImage::~CedImage()
 	this->m_meta = nullptr;
 }
 
-void common_ced::CedImage::clear()
+void utils::ximage::clear()
 {
 	if (this->m_meta)
 	{
@@ -196,7 +196,7 @@ void common_ced::CedImage::clear()
 	this->m_meta = nullptr;
 }
 
-bool common_ced::CedImage::loadFromFile(const char* fileName) const
+bool utils::ximage::loadFromFile(const char* fileName) const
 {
 	if (fileName == nullptr)
 	{
@@ -241,7 +241,7 @@ bool common_ced::CedImage::loadFromFile(const char* fileName) const
 
 	default:
 		// TODO: 抛出异常
-		common_ced::LOG_ERROR("通道数目不存在");
+		utils::LOG_ERROR("通道数目不存在");
 		delete[] this->m_meta->pixelData;
 		this->m_meta->pixelData = nullptr;
 		break;
@@ -249,7 +249,7 @@ bool common_ced::CedImage::loadFromFile(const char* fileName) const
 	return this->isOK();
 }
 
-bool common_ced::CedImage::loadFromMemory(const unsigned char* data, int width, int height, ColorFormat format, bool beenAlignMemory) const
+bool utils::ximage::loadFromMemory(const unsigned char* data, int width, int height, ColorFormat format, bool beenAlignMemory) const
 {
 	if (data == nullptr)
 	{
@@ -293,7 +293,7 @@ bool common_ced::CedImage::loadFromMemory(const unsigned char* data, int width, 
 	return this->isOK();
 }
 
-bool common_ced::CedImage::loadFromMemory(const unsigned char* rgb, const unsigned char* alpha, int width, int height, bool beenAlignMemory) const
+bool utils::ximage::loadFromMemory(const unsigned char* rgb, const unsigned char* alpha, int width, int height, bool beenAlignMemory) const
 {
 	if (rgb == nullptr)
 	{
@@ -355,14 +355,14 @@ bool common_ced::CedImage::loadFromMemory(const unsigned char* rgb, const unsign
 		}
 		catch (const std::out_of_range& e)
 		{
-			common_ced::LOG_ERROR("访问数组越界：", e.what());// 输出越界信息
+			utils::LOG_ERROR("访问数组越界：", e.what());// 输出越界信息
 			return false;
 		}
 	}
 	return this->isOK();
 }
 
-bool common_ced::CedImage::loadFormBase64(const std::string& base64String) const
+bool utils::ximage::loadFormBase64(const std::string& base64String) const
 {
 	std::string decodeStr = base64_decode(base64String);
 	unsigned char* pixelData = new unsigned char[decodeStr.size()];
@@ -384,18 +384,18 @@ bool common_ced::CedImage::loadFormBase64(const std::string& base64String) const
 		this->m_meta->format = ColorFormat::Format_Grayscale8;
 		break;
 	default:
-		common_ced::LOG_ERROR("channels is not available");
+		utils::LOG_ERROR("channels is not available");
 		return false;
 	}
 
 	return true;
 }
 
-std::string common_ced::CedImage::switchToBase64(FileFormat fileFormat) const
+std::string utils::ximage::switchToBase64(FileFormat fileFormat) const
 {
 	if (!isOK())
 	{
-		common_ced::LOG_WARN("cedImage is empty, switch to base64 failed");
+		utils::LOG_WARN("cedImage is empty, switch to base64 failed");
 		return {};
 	}
 
@@ -403,79 +403,79 @@ std::string common_ced::CedImage::switchToBase64(FileFormat fileFormat) const
 
 	if (fileData.empty())
 	{
-		common_ced::LOG_ERROR("base64转换失败");
+		utils::LOG_ERROR("base64转换失败");
 		return {};
 	}
 	std::string str64 = base64_encode(fileData.data(), fileData.size());
 	return str64;
 }
 
-bool common_ced::CedImage::isOK() const
+bool utils::ximage::isOK() const
 {
 	if (!this->m_meta || !this->m_meta->pixelData)
 	{
-		common_ced::LOG_ERROR("cedImage is not OK");
+		utils::LOG_ERROR("cedImage is not OK");
 		return false;
 	}
 	//TODO 其他的数据合法性判断以及异常的抛出
 	return true;
 }
 
-int common_ced::CedImage::getWidth() const
+int utils::ximage::getWidth() const
 {
 	return this->m_meta->width;
 }
 
-int common_ced::CedImage::getHeight() const
+int utils::ximage::getHeight() const
 {
 	return this->m_meta->height;
 }
 
-int common_ced::CedImage::getDataSize() const
+int utils::ximage::getDataSize() const
 {
 	return this->m_meta->width * this->m_meta->height * this->m_meta->channels;
 }
 
-int common_ced::CedImage::getBytesPerLine() const
+int utils::ximage::getBytesPerLine() const
 {
 	int bytesOffset = (4 - ((this->m_meta->width * this->m_meta->channels) % 4)) % 4;// 需要进行内存对齐
 	return this->m_meta->width * this->m_meta->channels + bytesOffset;
 }
 
-int common_ced::CedImage::getChannels() const
+int utils::ximage::getChannels() const
 {
 	return this->m_meta->channels;
 }
 
-common_ced::CedImage::ColorFormat common_ced::CedImage::getFormat() const
+utils::ximage::ColorFormat utils::ximage::getFormat() const
 {
 	return this->m_meta->format;
 }
 
-unsigned char* common_ced::CedImage::getData() const
+unsigned char* utils::ximage::getData() const
 {
 	unsigned char* data = new unsigned char[this->m_meta->width * this->m_meta->height * this->m_meta->channels];
 	memcpy(data, this->m_meta->pixelData, this->m_meta->width * this->m_meta->height * this->m_meta->channels);
 	return data;
 }
 
-// common_ced::CedImage::MetaData* common_ced::CedImage::getMeta() const
+// utils::XImage::MetaData* utils::XImage::getMeta() const
 // {
 // 	return this->m_meta;
 // }
 
 
-unsigned char* common_ced::CedImage::getRGB() const
+unsigned char* utils::ximage::getRGB() const
 {
 	if (this->m_meta->channels < RGB_CHANNELS)
 	{
 		//TODO 通道数小于3不能获取RGB
 		return nullptr;
 	}
-	//common_ced::LOG_INFO("获取RGB数据");
+	//utils::LOG_INFO("获取RGB数据");
 	if (!isOK())
 	{
-		common_ced::LOG_ERROR("cedImage初始化失败，不可用");
+		utils::LOG_ERROR("cedImage初始化失败，不可用");
 		return nullptr;// 外界需要判空
 	}
 	unsigned char* dataRgb = new unsigned char[this->m_meta->width * this->m_meta->height * RGB_CHANNELS];
@@ -503,24 +503,24 @@ unsigned char* common_ced::CedImage::getRGB() const
 	}
 	catch (const std::out_of_range& e)
 	{
-		common_ced::LOG_ERROR("访问数组越界：", e.what());// 输出越界信息
+		utils::LOG_ERROR("访问数组越界：", e.what());// 输出越界信息
 		return nullptr;
 	}
 
 	return dataRgb;
 }
 
-unsigned char* common_ced::CedImage::getAlpha() const
+unsigned char* utils::ximage::getAlpha() const
 {
 	if (this->m_meta->channels < RGB_CHANNELS)
 	{
 		//TODO 通道数小于3不能获取透明度
 		return nullptr;
 	}
-	common_ced::LOG_INFO("获取Alpha数据");
+	utils::LOG_INFO("获取Alpha数据");
 	if (!isOK())
 	{
-		common_ced::LOG_ERROR("cedImage初始化失败，不可用");
+		utils::LOG_ERROR("cedImage初始化失败，不可用");
 		return nullptr;// 外界需要判空
 	}
 	unsigned char* dataAlpha = new unsigned char[this->m_meta->width * this->m_meta->height * this->m_meta->channels];
@@ -545,23 +545,23 @@ unsigned char* common_ced::CedImage::getAlpha() const
 	}
 	catch (const std::out_of_range& e)
 	{
-		common_ced::LOG_ERROR("访问数组越界：", e.what());// 输出越界信息
+		utils::LOG_ERROR("访问数组越界：", e.what());// 输出越界信息
 		return nullptr;
 	}
 	return dataAlpha;
 }
 
-bool common_ced::CedImage::saveAsFile(const char* fileName) const
+bool utils::ximage::saveAsFile(const char* fileName) const
 {
 	//目前没有将内部图像类保存在本地的需求，一般都是上下游的图片自己保存到本地
 	std::string path(fileName);
 	if (!this->isOK())
 	{
-		common_ced::LOG_ERROR("cedImage不可用");
+		utils::LOG_ERROR("cedImage不可用");
 		return false;
 	}
 
-	common_ced::StringUtils::toLowerStr(path);// 转小写
+	utils::StringUtils::toLowerStr(path);// 转小写
 	if (path.find(".png") != std::string::npos)
 	{
 		return stbi_write_png(fileName, this->m_meta->width, this->m_meta->height, this->m_meta->channels, this->m_meta->pixelData, 0);
@@ -577,11 +577,11 @@ bool common_ced::CedImage::saveAsFile(const char* fileName) const
 	return false;
 }
 
-std::vector<unsigned char> common_ced::CedImage::saveAsMemoryFile(FileFormat fileFormat) const
+std::vector<unsigned char> utils::ximage::saveAsMemoryFile(FileFormat fileFormat) const
 {
 	if (!isOK())
 	{
-		common_ced::LOG_WARN("cedImage is empty, switch to base64 failed");
+		utils::LOG_WARN("cedImage is empty, switch to base64 failed");
 		return {};
 	}
 
@@ -611,7 +611,7 @@ std::vector<unsigned char> common_ced::CedImage::saveAsMemoryFile(FileFormat fil
 		                            this->m_meta->pixelData,
 		                            100))
 		{
-			common_ced::LOG_ERROR("base64转换jpg失败");
+			utils::LOG_ERROR("base64转换jpg失败");
 			return {};
 		}
 		return fileData;
@@ -627,27 +627,27 @@ std::vector<unsigned char> common_ced::CedImage::saveAsMemoryFile(FileFormat fil
 		                            this->m_meta->channels,
 		                            this->m_meta->pixelData))
 		{
-			common_ced::LOG_ERROR("base64转换bmp失败");
+			utils::LOG_ERROR("base64转换bmp失败");
 			return {};
 		}
 		return fileData;
 		break;
 	}
 	}
-	common_ced::LOG_ERROR("图片保存没有匹配到合适的图片类型");
+	utils::LOG_ERROR("图片保存没有匹配到合适的图片类型");
 	return {};
 }
 
-bool common_ced::CedImage::grayscaleUpToRGB() const
+bool utils::ximage::grayscaleUpToRGB() const
 {
 	if (!this->isOK())
 	{
-		common_ced::LOG_ERROR("cedImage不可用");
+		utils::LOG_ERROR("cedImage不可用");
 		return false;
 	}
 	if (this->m_meta->format != ColorFormat::Format_Grayscale8)
 	{
-		common_ced::LOG_ERROR("该方法只支持8位灰度图提升为RGB888");
+		utils::LOG_ERROR("该方法只支持8位灰度图提升为RGB888");
 		return false;
 	}
 	unsigned char* newPixelData = new unsigned char[this->m_meta->width * this->m_meta->height * RGB_CHANNELS];
@@ -664,7 +664,7 @@ bool common_ced::CedImage::grayscaleUpToRGB() const
 	}
 	catch (const std::out_of_range& e)
 	{
-		common_ced::LOG_ERROR("访问数组越界：", e.what());// 输出越界信息
+		utils::LOG_ERROR("访问数组越界：", e.what());// 输出越界信息
 		return false;
 	}
 
@@ -676,16 +676,16 @@ bool common_ced::CedImage::grayscaleUpToRGB() const
 	return true;
 }
 
-bool common_ced::CedImage::scaleProportional(int scaleFactor)
+bool utils::ximage::scaleProportional(int scaleFactor)
 {
 	if (!this->isOK())
 	{
-		common_ced::LOG_ERROR("cedImage不可用");
+		utils::LOG_ERROR("cedImage不可用");
 		return false;
 	}
 	if (scaleFactor <= 1)
 	{
-		common_ced::LOG_ERROR("放大倍数小于1");
+		utils::LOG_ERROR("放大倍数小于1");
 		return false;
 	}
 	int newWidth = this->m_meta->width * scaleFactor;
@@ -718,17 +718,17 @@ bool common_ced::CedImage::scaleProportional(int scaleFactor)
 	return this->scale(newWidth, newHeight);
 }
 
-bool common_ced::CedImage::scale(double scaleFactor)
+bool utils::ximage::scale(double scaleFactor)
 {
 	//3通道默认RGB，4通道默认RGBA
 	if (!this->isOK())
 	{
-		common_ced::LOG_ERROR("cedImage不可用");
+		utils::LOG_ERROR("cedImage不可用");
 		return false;
 	}
 	if (scaleFactor <= 0)
 	{
-		common_ced::LOG_ERROR("缩放倍数小于等于0");
+		utils::LOG_ERROR("缩放倍数小于等于0");
 		return false;
 	}
 	int newWidth = static_cast<int>(this->m_meta->width * scaleFactor);
@@ -737,18 +737,18 @@ bool common_ced::CedImage::scale(double scaleFactor)
 	return this->scale(newWidth, newHeight);
 }
 
-bool common_ced::CedImage::scale(double scaleFactorX, double scaleFactorY)
+bool utils::ximage::scale(double scaleFactorX, double scaleFactorY)
 {
 
 	//3通道默认RGB，4通道默认RGBA
 	if (!this->isOK())
 	{
-		common_ced::LOG_ERROR("cedImage不可用");
+		utils::LOG_ERROR("cedImage不可用");
 		return false;
 	}
 	if (scaleFactorX <= 0 || scaleFactorY <= 0)
 	{
-		common_ced::LOG_ERROR("缩放倍数小于等于0");
+		utils::LOG_ERROR("缩放倍数小于等于0");
 		return false;
 	}
 	int newWidth = static_cast<int>(this->m_meta->width * scaleFactorX);
@@ -757,16 +757,16 @@ bool common_ced::CedImage::scale(double scaleFactorX, double scaleFactorY)
 	return this->scale(newWidth, newHeight);
 }
 
-bool common_ced::CedImage::scale(int newWidth, int newHeight)
+bool utils::ximage::scale(int newWidth, int newHeight)
 {
 	if (!this->isOK())
 	{
-		common_ced::LOG_ERROR("cedImage不可用");
+		utils::LOG_ERROR("cedImage不可用");
 		return false;
 	}
 	if (newWidth <= 0 || newHeight <= 0)
 	{
-		common_ced::LOG_ERROR("缩放后长或宽小于等于0");
+		utils::LOG_ERROR("缩放后长或宽小于等于0");
 		return false;
 	}
 
@@ -798,7 +798,7 @@ bool common_ced::CedImage::scale(int newWidth, int newHeight)
 	{
 		delete[] newPixelData;
 		newPixelData = nullptr;
-		common_ced::LOG_ERROR("缩放失败");
+		utils::LOG_ERROR("缩放失败");
 		return false;
 	}
 
@@ -809,7 +809,7 @@ bool common_ced::CedImage::scale(int newWidth, int newHeight)
 	return true;
 }
 
-bool common_ced::CedImage::upQuality()
+bool utils::ximage::upQuality()
 {
 	unsigned char* newPixelData = new unsigned char[this->m_meta->width * this->m_meta->height * this->m_meta->channels];
 	if (
@@ -830,7 +830,7 @@ bool common_ced::CedImage::upQuality()
 	{
 		delete[] newPixelData;
 		newPixelData = nullptr;
-		common_ced::LOG_ERROR("缩放失败");
+		utils::LOG_ERROR("缩放失败");
 		return false;
 	}
 
@@ -839,27 +839,27 @@ bool common_ced::CedImage::upQuality()
 	return true;
 }
 
-bool common_ced::CedImage::changeOpacity(float opacityFactor)
+bool utils::ximage::changeOpacity(float opacityFactor)
 {
 	if (!this->isOK())
 	{
-		common_ced::LOG_ERROR("cedImage不可用");
+		utils::LOG_ERROR("cedImage不可用");
 		return false;
 	}
 	if (this->m_meta->channels < RGB_CHANNELS)// 只有RGB或RGBA才能增加/调整透明度
 	{
-		common_ced::LOG_ERROR("该图片类型不支持调整透明度");
+		utils::LOG_ERROR("该图片类型不支持调整透明度");
 		return false;
 	}
 	if (opacityFactor < 0.0f || opacityFactor > 1.0f)
 	{
-		common_ced::LOG_ERROR("透明度因子小于0或大于1");
+		utils::LOG_ERROR("透明度因子小于0或大于1");
 		return false;
 	}
 	unsigned char alpha = static_cast<unsigned char>(static_cast<int>(opacityFactor * 255));
 	if (alpha < 0 || alpha > 255)
 	{
-		common_ced::LOG_ERROR("透明度因子转换后小于0或大于255");
+		utils::LOG_ERROR("透明度因子转换后小于0或大于255");
 		return false;
 	}
 
@@ -883,28 +883,28 @@ bool common_ced::CedImage::changeOpacity(float opacityFactor)
 		}
 		catch (const std::out_of_range& e)
 		{
-			common_ced::LOG_ERROR("访问数组越界：", e.what());// 输出越界信息
+			utils::LOG_ERROR("访问数组越界：", e.what());// 输出越界信息
 			return false;
 		}
 		return true;
 	}
 }
 
-bool common_ced::CedImage::RGBToRGBA(const unsigned alpha)
+bool utils::ximage::RGBToRGBA(const unsigned alpha)
 {
 	if (!this->isOK())
 	{
-		common_ced::LOG_ERROR("cedImage不可用");
+		utils::LOG_ERROR("cedImage不可用");
 		return false;
 	}
 	if (this->m_meta->channels != RGB_CHANNELS)// 只有RGB或RGBA才能增加/调整透明度
 	{
-		common_ced::LOG_ERROR("该图片类型不支持调整透明度");
+		utils::LOG_ERROR("该图片类型不支持调整透明度");
 		return false;
 	}
 	if (alpha < 0 || alpha > 255)
 	{
-		common_ced::LOG_ERROR("透明度因子转换后小于0或大于255");
+		utils::LOG_ERROR("透明度因子转换后小于0或大于255");
 		return false;
 	}
 	unsigned char* newPixelData = new unsigned char[this->m_meta->width * this->m_meta->height * RGBA_CHANNELS];
@@ -926,7 +926,7 @@ bool common_ced::CedImage::RGBToRGBA(const unsigned alpha)
 	}
 	catch (const std::out_of_range& e)
 	{
-		common_ced::LOG_ERROR("访问数组越界：", e.what());// 输出越界信息
+		utils::LOG_ERROR("访问数组越界：", e.what());// 输出越界信息
 		delete[] newPixelData;
 		return false;
 	}
@@ -937,28 +937,28 @@ bool common_ced::CedImage::RGBToRGBA(const unsigned alpha)
 	return true;
 }
 
-void common_ced::CedImage::setReWitdh(int width)
+void utils::ximage::setReWitdh(int width)
 {
 	this->m_meta->reWitdh = width;
 }
 
-void common_ced::CedImage::setReHeight(int height)
+void utils::ximage::setReHeight(int height)
 {
 	this->m_meta->reHeight = height;
 }
 
-int common_ced::CedImage::getReWidth() const
+int utils::ximage::getReWidth() const
 {
 	return this->m_meta->reWitdh;
 }
 
-int common_ced::CedImage::getReHeight() const
+int utils::ximage::getReHeight() const
 {
 	return this->m_meta->reHeight;
 }
 
 
-void common_ced::CedImage::pixelCopy(const unsigned char* data) const
+void utils::ximage::pixelCopy(const unsigned char* data) const
 {
 	try
 	{
@@ -982,11 +982,11 @@ void common_ced::CedImage::pixelCopy(const unsigned char* data) const
 	}
 	catch (const std::out_of_range& e)
 	{
-		common_ced::LOG_ERROR("访问数组越界：", e.what());// 输出越界信息
+		utils::LOG_ERROR("访问数组越界：", e.what());// 输出越界信息
 	}
 }
 
-void common_ced::CedImage::deepCopy(const CedImage& other)
+void utils::ximage::deepCopy(const ximage& other)
 {
 	if (other.m_meta != nullptr)
 	{
@@ -1003,13 +1003,13 @@ void common_ced::CedImage::deepCopy(const CedImage& other)
 	}
 }
 
-void common_ced::CedImage::memoryWrite(void* context, void* data, int size)
+void utils::ximage::memoryWrite(void* context, void* data, int size)
 {
 	std::vector<unsigned char>* ctx = static_cast<std::vector<unsigned char>*>(context);
 	ctx->insert(ctx->end(), static_cast<unsigned char*>(data), static_cast<unsigned char*>(data) + size);
 }
 
-// bool common_ced::CedImage::grayscale8ToRGB(const unsigned char* pixelData, int width, int height) const
+// bool utils::XImage::grayscale8ToRGB(const unsigned char* pixelData, int width, int height) const
 // {
 // 	if (!pixelData)
 // 	{
@@ -1062,11 +1062,11 @@ void common_ced::CedImage::memoryWrite(void* context, void* data, int size)
 // }
 
 
-// bool common_ced::CedImage::upTo8Bit(const unsigned char* data, int width, int height) const
+// bool utils::XImage::upTo8Bit(const unsigned char* data, int width, int height) const
 // {
 // 	if (width <= 0 || height <= 0)
 // 	{
-// 		common_ced::LOG_ERROR("width or height is <= 0");
+// 		utils::LOG_ERROR("width or height is <= 0");
 // 		return false;
 // 	}
 //

@@ -1,12 +1,3 @@
-/*************************************************
- * 描述: 编辑器颜色类
- *
- * File: cedcolor.h
- * Author: wangzihan@mozihealthcare.cn
- * Date: 2025-01-21
- * Update: 
- * ************************************************/
-
 #ifndef EDITORCONTROLV5_CEDCOLOR_H
 #define EDITORCONTROLV5_CEDCOLOR_H
 
@@ -14,7 +5,7 @@
 #include <unordered_map>
 #include <ximage/cedcolorconstants.h>
 
-namespace common_ced
+namespace utils
 {
 	// 颜色的alpha值的默认值
 	constexpr unsigned char CED_COLOR_ALPHA_OPAQUE = 0xff;
@@ -31,11 +22,11 @@ namespace common_ced
 	// 用于掩码操作，提取最低的8位。
 	constexpr unsigned int CED_COLOR_MASK_8_BITS = 0xFF;
 
-	class CedColor
+	class xcolor
 	{
 	public:
 		// 默认构造函数,创建一个无效的颜色对象
-		CedColor();
+		xcolor();
 
 		/**
          * 颜色构造函数
@@ -44,7 +35,7 @@ namespace common_ced
          * @param blue 蓝色值(0~255)
          * @param alpha alpha值(0~255)
          */
-		CedColor(unsigned char red, unsigned char green, unsigned char blue, unsigned char alpha = CED_COLOR_ALPHA_OPAQUE);
+		xcolor(unsigned char red, unsigned char green, unsigned char blue, unsigned char alpha = CED_COLOR_ALPHA_OPAQUE);
 
 		/**
          * 颜色构造函数
@@ -53,13 +44,13 @@ namespace common_ced
          * @param blue 蓝色值(0~255)
          * @param alpha alpha值(0~255)
          */
-		CedColor(int red, int green, int blue, int alpha = 255);
+		xcolor(int red, int green, int blue, int alpha = 255);
 
 		/**
          * 拷贝构造函数
          * @param color
          */
-		CedColor(const CedColor& color);
+		xcolor(const xcolor& color);
 
 		/**
 		 * 字符串构造颜色对象
@@ -68,7 +59,7 @@ namespace common_ced
 		 * 支持(A)RGB字符串, 如"123,210,213" "255,230,123,213"
 		 * @param colorString
 		 */
-		CedColor(const std::string& colorString);
+		xcolor(const std::string& colorString);
 
 		/**
 		 * 判断颜色是否有效
@@ -158,7 +149,7 @@ namespace common_ced
 		void setRGBA(unsigned int colRGBA);
 
 		/**
-		 * 将颜色转换为16进制ARGB的字符串(例如 CedColor(255,0,0,255) == "#FFFF0000")
+		 * 将颜色转换为16进制ARGB的字符串(例如 XColor(255,0,0,255) == "#FFFF0000")
 		 * @return
 		 */
 		std::string getAsString() const;
@@ -169,11 +160,11 @@ namespace common_ced
 //		 */
 //		double luminance() const;
 
-		bool operator!=(const CedColor& color) const;
+		bool operator!=(const xcolor& color) const;
 
-		CedColor& operator=(const CedColor& color);
+		xcolor& operator=(const xcolor& color);
 
-		bool operator==(const CedColor& color) const;
+		bool operator==(const xcolor& color) const;
 
 	private:
 		/**
@@ -200,7 +191,7 @@ namespace common_ced
 		bool m_isValid;
 	};
 #define CED_WINDOW_COLOR
-}// namespace common_ced
+}// namespace utils
 
 
 #endif//EDITORCONTROLV5_CEDCOLOR_H

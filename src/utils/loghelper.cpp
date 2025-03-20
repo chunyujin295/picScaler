@@ -14,7 +14,7 @@
 #include <spdlog/spdlog-inl.h>
 #include <utils/stringutils.h>
 
-using namespace common_ced;
+using namespace utils;
 std::mutex LogCusTomSignalSlot::s_mutex;
 LogCusTomSignalSlot* LogCusTomSignalSlot::s_logCusTomSignalSlot = nullptr;
 
@@ -300,7 +300,7 @@ void LogHelper::setCallBackSink(std::ostringstream& stream, bool flush, LogLevel
 {
     LogHelper::setStreamOutPut(stream, flush, level);
 
-    auto callback = std::bind(&common_ced::LogHelper::logCallBack, getInstance(), std::placeholders::_1);
+    auto callback = std::bind(&utils::LogHelper::logCallBack, getInstance(), std::placeholders::_1);
     auto callBackSink = std::make_shared<spdlog::sinks::callback_sink_mt>(callback);
 
     callBackSink->set_level(static_cast<spdlog::level::level_enum>(level));

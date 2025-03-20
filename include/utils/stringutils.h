@@ -14,7 +14,7 @@
 #include <boost/optional.hpp>
 #include <string>
 #include <vector>
-namespace common_ced
+namespace utils
 {
 
 	class StringUtils
@@ -46,6 +46,6 @@ namespace common_ced
 		 */
 		static void toLowerStr(std::string& str);
 	};
-}// namespace common_ced
+}// namespace utils
 
 #endif//EDITORCONTROLV5_STRINGUTILS_H

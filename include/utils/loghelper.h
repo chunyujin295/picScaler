@@ -1,11 +1,3 @@
-/*************************************************
- * 描述：日志对象封装类
- *
- * File：loghelper.h
- * Author：chenyujin@mozihealthcare.cn
- * Date：25-1-14
- * Update：
- * ************************************************/
 #ifndef LOGHELPER_H
 #define LOGHELPER_H
 
@@ -26,7 +18,7 @@ namespace spdlog
 	class logger;
 }// namespace spdlog
 
-namespace common_ced
+namespace utils
 {
 
 	using cusTomSlot = std::function<void()>;// 槽函数类型
@@ -300,6 +292,6 @@ namespace common_ced
 #define LOG_WARN(...) LogHelper::warn(GET_LINE, {__VA_ARGS__})  // 同上 [warn级别]
 #define LOG_ERROR(...) LogHelper::error(GET_LINE, {__VA_ARGS__})// 同上 [error级别]
 #define LOG_CRITI(...) LogHelper::critical(GET_LINE, {__VA_ARGS__})// 同上 [critical级别]
-}// namespace common_ced
+}// namespace utils
 
 #endif//LOGHELPER_H
