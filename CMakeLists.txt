@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.15)
 
 project(picScaler LANGUAGES CXX)
 
+set(EDIT_ROOT ${CMAKE_SOURCE_DIR})
+
 include(cmake/3rd.cmake)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
@@ -28,3 +30,8 @@ target_include_directories(picScaler PUBLIC ${PROJECT_SOURCE_DIR}/3rd/stb_image/
 target_include_directories(picScaler PUBLIC ${PROJECT_SOURCE_DIR}/3rd/boost_1_87)
 target_include_directories(picScaler PUBLIC ${PROJECT_SOURCE_DIR}/3rd/spdlog_1_15/include)
 target_include_directories(picScaler PUBLIC ${PROJECT_SOURCE_DIR}/include)
+
+set_target_properties(
+        picScaler PROPERTIES
+        RUNTIME_OUTPUT_DIRECTORY ${EDIT_ROOT}/bin
+)
