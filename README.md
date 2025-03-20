@@ -1,4 +1,4 @@
-<img src="./doc/image/Cockle20.png" alt="Cockle20" style="zoom: 25%;" />
+<img src="./doc/image/Cockle4.png" alt="Cockle20"  />
 
 # picScale-图片缩放器
 
