@@ -1,4 +1,4 @@
-<img src="./doc/image/Cockle4.png" alt="Cockle20"  />
+<div><center><img src="./doc/image/Cockle4.png" alt="Cockle20"  /></center></div>
 
 # picScale-图片缩放器
 
